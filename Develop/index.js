@@ -1,4 +1,7 @@
 const inquirer = require('inquirer')
+const generatePage = require('./utils/generateMarkdown');
+const fs = require('fs')
+
 // array of questions for user
 const questions = [
     {
@@ -31,7 +34,12 @@ const questions = [
         type: 'list',
         name: 'license',
         message: 'What license would you like to use?',
-        choices: ['MIT', 'GNU GPLv3', '(Other/No License)']
+        choices: ['MIT', 'GNU_GPLv3', '(Other/No License)']
+    },
+    {
+        type: 'input',
+        name: 'fullname',
+        message: 'Enter your full name for the license',    
     },
     {
         type: 'confirm',
@@ -76,7 +84,7 @@ const questions = [
     },
     {
         type: 'input',
-        name: 'Contribution',
+        name: 'contribution',
         message: 'How can other developers contribute?',
         when: ({ confirmCont }) => {
             if (confirmCont) {
@@ -105,32 +113,142 @@ const questions = [
     },
     {
         type: 'confirm',
-        name: 'confirmQuest',
-        message: 'Would you like to tell people how to reach out to you for questions, comments or anything else?'
+        name: 'confirmResources',
+        message: 'Would you like to credit anyone or any resources'
     },
     {
         type: 'input',
-        name: 'questions',
-        message: 'Enter your GitHub Username and or email so people can reach out:',
-        when: ({ confirmQuest }) => {
-            if (confirmQuest) {
+        name: 'resources',
+        message: 'cite your resources:',
+        when: ({ confirmResources }) => {
+            if (confirmResources) {
               return true;
             } else {
               return false;
             }
         }
     }
-
 ];
 
-// function to write README file
-const writeToFile = (fileName, data) => {
+const promptContact = qData =>{
+    if (!qData.contactInfo){
+        qData.contactInfo = [];
+    }
+
+    return inquirer.prompt([
+        {
+            type: 'confirm',
+            name: 'confirmQuest',
+            message: 'Would you like to tell people how to reach out to you for questions, comments or anything else?'
+        },
+        {
+            type: 'input',
+            name: 'github',
+            message: 'Enter your GitHub Username:',
+            when: ({ confirmQuest }) => {
+                if (confirmQuest) {
+                return true;
+                } else {
+                return false;
+                }
+            }
+        },
+        {
+            type: 'confirm',
+            name: 'confirmEmail',
+            message: 'Would you like to enter your email as well?',
+            when: ({ confirmQuest }) => {
+                if (confirmQuest) {
+                return true;
+                } else {
+                return false;
+                }
+            }
+        },
+        {
+            type: 'input',
+            name: 'email',
+            message: 'Enter your Email:',
+            when: ({ confirmEmail }) => {
+                if (confirmEmail) {
+                return true;
+                } else {
+                return false;
+                }
+            }
+        }
+    ])
+    .then(contactData => {
+        qData.contactInfo.push(contactData);
+        
+        return qData;
+        
+    });
 }
+
+////////////////// mock data ////////////////////////////////////////////////////////////////////////////////
+const mockData =
+{
+    title: 'readme-generator',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    license: '(Other/No License)',
+    fullname: 'grey whittenberger',
+    confirmInstallation: true,
+    installation: 'install it then run it',
+    confirmUsage: true,
+    usage: 'to use the project just figure it out',
+    confirmCont: true,
+    contribution: 'if you would like to contribute, too bad',
+    confirmTest: true,
+    test: 'to run a test you must enter "sdlfkjghsdflkgjhsdf" in the console',
+    confirmResources: true,
+    resources: 'google.com github.com people',
+    contactInfo: 
+        {
+        confirmQuest: true,
+        github: 'grey-whitt',
+        confirmEmail: true,
+        email: 'greywhitt@gmail.com'
+        }
+    
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+// function to write README file
+const writeToFile = (data) => {
+    return new Promise((resolve, reject) => {
+        fs.writeFile('./dist/README.md', data, err => {
+            // if there's an error, reject the Promise and send the error to the Promise's `.catch()` method
+            if (err) {
+                reject(err);
+                // return out of the function here to make sure the Promise doesn't accidentally execute the resolve() function as well
+                return;
+            }
+
+            // if everything went well, resolve the Promise and send the successful data to the `.then()` method
+            resolve({
+                ok: true,
+                message: 'File created!'
+            });
+        });
+    });
+}
+
+writeToFile(generatePage(mockData).trim())
 
 // function to initialize program
 const init = () => {
-    return inquirer.prompt(questions)
+   return inquirer.prompt(questions)
 }
 
-// function call to initialize program
-init();
+//function call to initialize program
+// init()
+ // .then(promptContact)
+ // .then(data => {
+ //     return generatePage(data)
+  //})
+
+  //add credits prompt
+
