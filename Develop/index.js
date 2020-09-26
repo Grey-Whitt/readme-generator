@@ -10,12 +10,12 @@ const questions = [
         message: 'What is your projects title? (Required)',
         validate: titleInput => {
             if (titleInput) {
-              return true;
+                return true;
             } else {
-              console.log('Please enter your projects title!');
-              return false;
+                console.log('Please enter your projects title!');
+                return false;
             }
-        }    
+        }
     },
     {
         type: 'input',
@@ -23,12 +23,12 @@ const questions = [
         message: 'Provide a description of what your project is about (Required)',
         validate: descInput => {
             if (descInput) {
-              return true;
+                return true;
             } else {
-              console.log('Please enter your projects description!');
-              return false;
+                console.log('Please enter your projects description!');
+                return false;
             }
-        }    
+        }
     },
     {
         type: 'list',
@@ -39,7 +39,7 @@ const questions = [
     {
         type: 'input',
         name: 'fullname',
-        message: 'Enter your full name for the license',    
+        message: 'Enter your full name for the license',
     },
     {
         type: 'confirm',
@@ -53,9 +53,9 @@ const questions = [
         message: 'How do you install your program?:',
         when: ({ confirmInstallation }) => {
             if (confirmInstallation) {
-              return true;
+                return true;
             } else {
-              return false;
+                return false;
             }
         }
     },
@@ -71,9 +71,9 @@ const questions = [
         message: 'Explain how to use the application',
         when: ({ confirmUsage }) => {
             if (confirmUsage) {
-              return true;
+                return true;
             } else {
-              return false;
+                return false;
             }
         }
     },
@@ -88,9 +88,9 @@ const questions = [
         message: 'How can other developers contribute?',
         when: ({ confirmCont }) => {
             if (confirmCont) {
-              return true;
+                return true;
             } else {
-              return false;
+                return false;
             }
         }
     },
@@ -105,9 +105,9 @@ const questions = [
         message: 'How can other people test your program?',
         when: ({ confirmTest }) => {
             if (confirmTest) {
-              return true;
+                return true;
             } else {
-              return false;
+                return false;
             }
         }
     },
@@ -122,16 +122,16 @@ const questions = [
         message: 'cite your resources:',
         when: ({ confirmResources }) => {
             if (confirmResources) {
-              return true;
+                return true;
             } else {
-              return false;
+                return false;
             }
         }
     }
 ];
 
-const promptContact = qData =>{
-    if (!qData.contactInfo){
+const promptContact = qData => {
+    if (!qData.contactInfo) {
         qData.contactInfo = [];
     }
 
@@ -147,9 +147,9 @@ const promptContact = qData =>{
             message: 'Enter your GitHub Username:',
             when: ({ confirmQuest }) => {
                 if (confirmQuest) {
-                return true;
+                    return true;
                 } else {
-                return false;
+                    return false;
                 }
             }
         },
@@ -159,9 +159,9 @@ const promptContact = qData =>{
             message: 'Would you like to enter your email as well?',
             when: ({ confirmQuest }) => {
                 if (confirmQuest) {
-                return true;
+                    return true;
                 } else {
-                return false;
+                    return false;
                 }
             }
         },
@@ -171,19 +171,19 @@ const promptContact = qData =>{
             message: 'Enter your Email:',
             when: ({ confirmEmail }) => {
                 if (confirmEmail) {
-                return true;
+                    return true;
                 } else {
-                return false;
+                    return false;
                 }
             }
         }
     ])
-    .then(contactData => {
-        qData.contactInfo.push(contactData);
-        
-        return qData;
-        
-    });
+        .then(contactData => {
+            qData.contactInfo.push(contactData);
+
+            return qData;
+
+        });
 }
 
 ////////////////// mock data ////////////////////////////////////////////////////////////////////////////////
@@ -203,14 +203,14 @@ const mockData =
     test: 'to run a test you must enter "sdlfkjghsdflkgjhsdf" in the console',
     confirmResources: true,
     resources: 'google.com github.com people',
-    contactInfo: 
-        {
+    contactInfo:
+    {
         confirmQuest: true,
         github: 'grey-whitt',
         confirmEmail: true,
         email: 'greywhitt@gmail.com'
-        }
-    
+    }
+
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -221,6 +221,7 @@ const writeToFile = (data) => {
     return new Promise((resolve, reject) => {
         fs.writeFile('./dist/README.md', data, err => {
             // if there's an error, reject the Promise and send the error to the Promise's `.catch()` method
+
             if (err) {
                 reject(err);
                 // return out of the function here to make sure the Promise doesn't accidentally execute the resolve() function as well
@@ -232,23 +233,34 @@ const writeToFile = (data) => {
                 ok: true,
                 message: 'File created!'
             });
+
+
         });
     });
 }
 
-writeToFile(generatePage(mockData).trim())
+
+
+writeToFile(generatePage(mockData).trim()).catch(err => { console.log(err); });
 
 // function to initialize program
 const init = () => {
-   return inquirer.prompt(questions)
+    return inquirer.prompt(questions)
 }
 
 //function call to initialize program
-// init()
- // .then(promptContact)
- // .then(data => {
- //     return generatePage(data)
-  //})
+init()
+    .then(promptContact)
+    .then(data => {
+        return generatePage(data)
+    })
+    .then(data => {
+        return writeToFile(data.trim())
+    })
 
-  //add credits prompt
+    .catch(err => {
+        console.log(err);
+    });
+
+
 

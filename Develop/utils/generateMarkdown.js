@@ -1,14 +1,36 @@
 const moment = require('moment')
-
+const fs = require('fs')
 const year = moment().format('YYYY')
 
+const copyFile = (license) => {
+  licenseStyle = ''
+  if (license === '(Other/No License)') {
+    licenseStyle = 'contributor_covenant.md'
+  } else if (license === 'MIT') {
+    licenseStyle = 'LICENSE.txt'
+  } else if (license === 'GNU_GPLv3') {
+    licenseStyle = 'COPYING.txt'
+  }
+  
+  fs.copyFile(`./utils/${licenseStyle}`, `./dist/${licenseStyle}`, err => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+
+    ;
+  });
+
+}
 
 
 // function to generate markdown for README
 function generateMarkdown(data) {
-  let {fullname, license, confirmInstallation, installation, confirmUsage, usage, confirmCont, contribution, confirmTest, test, confirmResources, resources} = data
-  let {confirmQuest, github, confirmEmail, email} = data.contactInfo
+  let { license, confirmInstallation, installation, confirmUsage, usage, confirmCont, contribution, confirmTest, test, confirmResources, resources } = data
+  let { confirmQuest, github, confirmEmail, email } = data.contactInfo
+
   
+
   const newData = {
     title: data.title,
     description: data.description,
@@ -23,18 +45,24 @@ function generateMarkdown(data) {
     contact: '',
     licenseSection: '',
     fullname: data.fullname,
-    table: ''
+    table: '',
+    licenseStyle: data.license
   }
+
+  copyFile(newData.licenseStyle)
 
   if (license === '(Other/No License)') {
     newData.license = '![License](https://img.shields.io/badge/-Contributor_Covenant-blueviolet)'
     newData.licenseSection = '[License](./contributor_covenant.md)'
+
   } else if (license === 'MIT') {
     newData.license = `![license](https://img.shields.io/badge/License-MIT-brightgreen)`
     newData.licenseSection = './LICENSE.txt'
-  } else if (license === 'GNU_GPLv3'){
+
+  } else if (license === 'GNU_GPLv3') {
     newData.license = `![license](https://img.shields.io/badge/License-GNU_GPLv3-brightgreen)`
     newData.licenseSection = '[License](./COPYING.txt)'
+
   };
 
   if (confirmInstallation) {
@@ -85,39 +113,40 @@ function generateMarkdown(data) {
 
 
 
-   
+
   return passedData(newData)
 }
 
 const passedData = (data) => {
-  console.log(data)
-  
-  let {title, description, license, installation, usage, contribution, test, contact, resources, licenseSection, fullname, table} = data
-  
-  
-  return`# ${title}
-  ${license}
 
-  ## Description
-  ${description}
+  let { title, description, license, installation, usage, contribution, test, contact, resources, licenseSection, fullname, table } = data
 
-  ${table}
 
-  ${installation}
+  return `# ${title}
+${license}
 
-  ${usage}
+## Description
+${description}
 
-  ${contribution}
+${table}
 
-  ${test}
+${installation}
 
-  ${contact}
+${usage}
 
-  ${resources}
+${contribution}
 
-  ${licenseSection}
+${test}
 
-  ${fullname} ${year}`;
+${contact}
+
+${resources}
+
+${licenseSection}
+
+${fullname} ${year}`;
 }
+
+
 
 module.exports = generateMarkdown;
