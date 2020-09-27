@@ -10,7 +10,7 @@ This is a command line program that generates a readme based on input that you p
 
 
 ## Installation 
-    View the tutorial here -
+    View the tutorial here - https://youtu.be/RdVOp3lrbsk
 
 
 
