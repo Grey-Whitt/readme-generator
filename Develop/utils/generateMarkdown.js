@@ -27,8 +27,9 @@ const copyFile = (license) => {
 // function to generate markdown for README
 function generateMarkdown(data) {
   let { license, confirmInstallation, installation, confirmUsage, usage, confirmCont, contribution, confirmTest, test, confirmResources, resources } = data
-  let { confirmQuest, github, confirmEmail, email } = data.contactInfo
+  let {confirmQuest, github, confirmEmail, email } = data.contactInfo[0]
 
+  
   
 
   const newData = {
@@ -92,15 +93,15 @@ function generateMarkdown(data) {
     newData.table = newData.table + `* [Testing](#Testing)\n`
   }
 
+  
   if (confirmQuest) {
     newData.github = `https://github.com/${github}`
     if (confirmEmail) {
       newData.email = `${email}`
     }
 
-    newData.contact = `## Contact Me With Any Questions, Comments or Anything else 
-    ${newData.github}
-    ${newData.email}`
+    
+    newData.contact = `## Contact Me With Any Questions, Comments or Anything else`
 
     newData.table = newData.table + `* [Contact](#Contact)\n`
   }
@@ -118,9 +119,9 @@ function generateMarkdown(data) {
 }
 
 const passedData = (data) => {
-
-  let { title, description, license, installation, usage, contribution, test, contact, resources, licenseSection, fullname, table } = data
-
+  console.log(data)
+  let { title, description, license, installation, usage, contribution, test, contact, email, github, resources, licenseSection, fullname, table } = data
+  
 
   return `# ${title}
 ${license}
@@ -138,9 +139,12 @@ ${contribution}
 
 ${test}
 
-${contact}
-
 ${resources}
+
+${contact}
+${github}
+
+${email}
 
 ${licenseSection}
 
