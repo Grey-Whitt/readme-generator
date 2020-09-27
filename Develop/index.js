@@ -101,7 +101,7 @@ const questions = [
     },
     {
         type: 'input',
-        name: 'Test',
+        name: 'test',
         message: 'How can other people test your program?',
         when: ({ confirmTest }) => {
             if (confirmTest) {
@@ -186,36 +186,6 @@ const promptContact = qData => {
         });
 }
 
-////////////////// mock data ////////////////////////////////////////////////////////////////////////////////
-const mockData =
-{
-    title: 'readme-generator',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-    license: '(Other/No License)',
-    fullname: 'grey whittenberger',
-    confirmInstallation: true,
-    installation: 'install it then run it',
-    confirmUsage: true,
-    usage: 'to use the project just figure it out',
-    confirmCont: true,
-    contribution: 'if you would like to contribute, too bad',
-    confirmTest: true,
-    test: 'to run a test you must enter "sdlfkjghsdflkgjhsdf" in the console',
-    confirmResources: true,
-    resources: 'google.com github.com people',
-    contactInfo:
-    {
-        confirmQuest: true,
-        github: 'grey-whitt',
-        confirmEmail: true,
-        email: 'greywhitt@gmail.com'
-    }
-
-}
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
 // function to write README file
 const writeToFile = (data) => {
     return new Promise((resolve, reject) => {
@@ -238,10 +208,6 @@ const writeToFile = (data) => {
         });
     });
 }
-
-
-
-writeToFile(generatePage(mockData).trim()).catch(err => { console.log(err); });
 
 // function to initialize program
 const init = () => {
