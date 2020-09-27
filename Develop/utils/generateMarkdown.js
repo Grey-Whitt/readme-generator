@@ -74,10 +74,10 @@ function generateMarkdown(data) {
   }
 
   if (confirmUsage) {
-    newData.usage = `## How To Use
+    newData.usage = `## Usage
     ${usage}`
 
-    newData.table = newData.table + `* [usage](#How)\n`
+    newData.table = newData.table + `* [Usage](#Usage)\n`
   }
 
   if (confirmCont) {
@@ -101,7 +101,8 @@ function generateMarkdown(data) {
     }
 
     
-    newData.contact = `## Contact Me With Any Questions, Comments or Anything else`
+    newData.contact = `## Contact
+    Contact Me With Any Questions, Comments or Anything else`
 
     newData.table = newData.table + `* [Contact](#Contact)\n`
   }
@@ -119,7 +120,7 @@ function generateMarkdown(data) {
 }
 
 const passedData = (data) => {
-  console.log(data)
+  
   let { title, description, license, installation, usage, contribution, test, contact, email, github, resources, licenseSection, fullname, table } = data
   
 

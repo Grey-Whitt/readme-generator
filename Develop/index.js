@@ -221,9 +221,9 @@ init()
         return generatePage(data)
     })
     .then(data => {
+        console.log('Done!')
         return writeToFile(data.trim())
     })
-
     .catch(err => {
         console.log(err);
     });
